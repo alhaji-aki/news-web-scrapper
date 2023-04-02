@@ -6,8 +6,8 @@
 
 ### Models
 
-1. News Outlet: name, website, url_structure.
-2. Categories: name {preseeded categories: business, technology, international, sports, showbiz}
+1. News Outlet: name, website, url_structure {contains website a pattern `:category` in it.}.
+2. Categories: slug {unique}, name {unique} {seeded categories: business, technology, international, sports, showbiz}
 3. Article: title, summary, content, link to article, category, outlet, time/date
 
 ## Installation
