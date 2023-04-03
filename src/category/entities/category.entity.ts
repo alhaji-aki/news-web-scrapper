@@ -45,8 +45,6 @@ export class Category {
   @BeforeInsert()
   @BeforeUpdate()
   generateSlug() {
-    console.log(this.name);
-
     this.slug = slugify(this.name, {
       lower: true,
       trim: true,
