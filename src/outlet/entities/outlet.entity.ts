@@ -3,10 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
+import { Category } from '../../category/entities/category.entity';
 
 @Entity('outlets')
 export class Outlet {
@@ -24,6 +27,16 @@ export class Outlet {
 
   @Column({ unique: true })
   website: string;
+
+  @ManyToMany(() => Category, (category) => category.outlets, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: 'category_outlet',
+    joinColumn: { name: 'outlet_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
+  })
+  categories: Category[];
 
   @CreateDateColumn({
     type: 'timestamp',

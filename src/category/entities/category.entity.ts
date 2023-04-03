@@ -4,11 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import slugify from 'slugify';
+import { Outlet } from '../../outlet/entities/outlet.entity';
 
 @Entity('categories')
 export class Category {
@@ -22,6 +24,9 @@ export class Category {
 
   @Column({ unique: true })
   name: string;
+
+  @ManyToMany(() => Outlet, (outlet) => outlet.categories)
+  outlets: Outlet[];
 
   @CreateDateColumn({
     type: 'timestamp',
