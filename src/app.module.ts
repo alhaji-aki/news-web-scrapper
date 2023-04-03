@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { OutletModule } from './outlet/outlet.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ValidatorModule } from './common/validators/validator.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ValidatorModule } from './common/validators/validator.module';
     }),
     ValidatorModule,
     OutletModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [],
