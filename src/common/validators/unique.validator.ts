@@ -65,7 +65,13 @@ export class UniqueValidator implements ValidatorConstraintInterface {
 
     const column = constraints.column ?? args.property;
 
-    return `${constraints.entity.name} with the same '${column}' already exist`;
+    const formattedEntityName = constraints.entity.name
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, function (str) {
+        return str.toUpperCase();
+      })
+      .trim();
+    return `${formattedEntityName} with the same '${column}' already exist`;
   }
 }
 

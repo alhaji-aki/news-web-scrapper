@@ -5,7 +5,7 @@ import { IsUnique } from '../../common/validators/unique.validator';
 import { Outlet } from '../entities/outlet.entity';
 
 export class UpdateOutletDto extends PartialType(
-  OmitType(CreateOutletDto, ['name', 'website'] as const),
+  OmitType(CreateOutletDto, ['name', 'website', 'categories'] as const),
 ) {
   @IsOptional()
   @MaxLength(255)

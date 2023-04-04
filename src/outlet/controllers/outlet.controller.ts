@@ -7,11 +7,11 @@ import {
   Delete,
   ValidationPipe,
 } from '@nestjs/common';
-import { OutletService } from './outlet.service';
-import { CreateOutletDto } from './dto/create-outlet.dto';
-import { UpdateOutletDto } from './dto/update-outlet.dto';
-import { CustomBody } from '../common/decorators/custom-body.decorator';
-import { customDecoratorsValidationOptions } from '../config/validation.config';
+import { OutletService } from '../services/outlet.service';
+import { CreateOutletDto } from '../dto/create-outlet.dto';
+import { UpdateOutletDto } from '../dto/update-outlet.dto';
+import { CustomBody } from '../../common/decorators/custom-body.decorator';
+import { customDecoratorsValidationOptions } from '../../config/validation.config';
 
 @Controller('outlets')
 export class OutletController {

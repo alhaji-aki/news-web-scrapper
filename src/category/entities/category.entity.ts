@@ -4,13 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import slugify from 'slugify';
-import { Outlet } from '../../outlet/entities/outlet.entity';
+import { OutletCategory } from '../../outlet/entities/outlet-category.entity';
 
 @Entity('categories')
 export class Category {
@@ -25,8 +25,8 @@ export class Category {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => Outlet, (outlet) => outlet.categories)
-  outlets: Outlet[];
+  @OneToMany(() => OutletCategory, (outletCategory) => outletCategory.category)
+  public outlets: OutletCategory[];
 
   @CreateDateColumn({
     type: 'timestamp',
