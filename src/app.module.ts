@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ValidatorModule } from './common/validators/validator.module';
 import { CategoryModule } from './category/category.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ArticleModule } from './article/article.module';
 import databaseConfig from './config/database.config';
 import { ScheduleModule } from '@nestjs/schedule';
 
@@ -33,6 +34,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ValidatorModule,
     OutletModule,
     CategoryModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [],

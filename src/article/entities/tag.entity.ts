@@ -1,38 +1,32 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
-import { OutletCategory } from './outlet-category.entity';
-import { Article } from '../../article/entities/article.entity';
+import slugify from 'slugify';
+import { Article } from './article.entity';
 
-@Entity('outlets')
-export class Outlet {
+@Entity('tags')
+export class Tag {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   @Exclude({ toPlainOnly: true })
   @Expose({ toClassOnly: true })
   id: number;
 
   @Column({ unique: true })
-  @Generated('uuid')
-  uuid: string;
+  slug: string;
 
   @Column({ unique: true })
   name: string;
 
-  @Column({ unique: true })
-  website: string;
-
-  @OneToMany(() => OutletCategory, (outletCategory) => outletCategory.outlet)
-  public categories: OutletCategory[];
-
-  @OneToMany(() => Article, (article) => article.outlet)
-  public articles: Article[];
+  @ManyToMany(() => Article, (article) => article.tags)
+  articles: Article[];
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -49,7 +43,17 @@ export class Outlet {
   })
   updatedAt: Date;
 
-  constructor(partial?: Partial<Outlet>) {
+  constructor(partial?: Partial<Tag>) {
     Object.assign(this, partial);
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  generateSlug() {
+    this.slug = slugify(this.name, {
+      lower: true,
+      trim: true,
+      strict: true,
+    });
   }
 }

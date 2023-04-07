@@ -12,5 +12,6 @@ import { OutletCategory } from './entities/outlet-category.entity';
   imports: [TypeOrmModule.forFeature([Outlet, OutletCategory]), CategoryModule],
   controllers: [OutletController, OutletCategoryController],
   providers: [OutletService, OutletCategoryService],
+  exports: [OutletService, OutletCategoryService],
 })
 export class OutletModule {}

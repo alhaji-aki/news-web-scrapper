@@ -13,6 +13,7 @@ import { UpdateOutletDto } from '../dto/update-outlet.dto';
 import { CustomBody } from '../../common/decorators/custom-body.decorator';
 import { customDecoratorsValidationOptions } from '../../config/validation.config';
 
+// TODO: hide all these endpoints except index behind an authentication
 @Controller('outlets')
 export class OutletController {
   constructor(private readonly outletService: OutletService) {}

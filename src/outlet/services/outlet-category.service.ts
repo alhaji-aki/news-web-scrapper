@@ -15,6 +15,13 @@ export class OutletCategoryService {
     @InjectRepository(OutletCategory)
     private readonly outletCategoryRepository: Repository<OutletCategory>,
   ) {}
+
+  async index() {
+    return await this.outletCategoryRepository.find({
+      relations: ['outlet', 'category'],
+    });
+  }
+
   async create(outlet: string, addCategoryToOutletDto: AddCategoryToOutletDto) {
     const outletEntity = await this.outletService.find(outlet);
 

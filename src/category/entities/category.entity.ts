@@ -11,6 +11,7 @@ import {
 import { Exclude, Expose } from 'class-transformer';
 import slugify from 'slugify';
 import { OutletCategory } from '../../outlet/entities/outlet-category.entity';
+import { Article } from '../../article/entities/article.entity';
 
 @Entity('categories')
 export class Category {
@@ -27,6 +28,9 @@ export class Category {
 
   @OneToMany(() => OutletCategory, (outletCategory) => outletCategory.category)
   public outlets: OutletCategory[];
+
+  @OneToMany(() => Article, (article) => article.category)
+  public articles: Article[];
 
   @CreateDateColumn({
     type: 'timestamp',

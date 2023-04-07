@@ -13,6 +13,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CustomBody } from '../common/decorators/custom-body.decorator';
 import { customDecoratorsValidationOptions } from '../config/validation.config';
 
+// TODO: hide all these endpoints except index behind an authentication
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

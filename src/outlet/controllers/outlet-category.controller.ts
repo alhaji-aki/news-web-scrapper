@@ -3,6 +3,7 @@ import { OutletCategoryService } from '../services/outlet-category.service';
 import { AddCategoryToOutletDto } from '../dto/add-category-to-outlet.dto';
 import { UpdateOutletCategoryDto } from '../dto/update-outlet-category.dto';
 
+// TODO: hide all these endpoints behind an authentication
 @Controller('outlets/:outlet/categories')
 export class OutletCategoryController {
   constructor(private readonly outletCategoryService: OutletCategoryService) {}
