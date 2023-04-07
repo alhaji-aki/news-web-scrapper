@@ -6,6 +6,7 @@ import { ValidatorModule } from './common/validators/validator.module';
 import { CategoryModule } from './category/category.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import databaseConfig from './config/database.config';
         synchronize: true, // TODO: change this use the app environment
       }),
     }),
+    ScheduleModule.forRoot(),
     ValidatorModule,
     OutletModule,
     CategoryModule,
