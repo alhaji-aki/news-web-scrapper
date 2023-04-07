@@ -43,6 +43,17 @@ export class OutletCategory {
   @Column({ unique: true })
   link: string;
 
+  @Column('json')
+  selectors: {
+    article_card: string;
+    link: string;
+    title: string;
+    date: string;
+    tags: string;
+    image: string;
+    content: string;
+  };
+
   @CreateDateColumn({
     type: 'timestamp',
     name: 'created_at',

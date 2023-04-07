@@ -1,6 +1,7 @@
-import { IsNotEmpty, MaxLength, IsUrl } from 'class-validator';
+import { IsNotEmpty, MaxLength, IsUrl, ValidateNested } from 'class-validator';
 import { IsExists } from '../../common/validators/exists.validator';
 import { Category } from '../../category/entities/category.entity';
+import { Selectors } from './selectors.dto';
 
 export class AddCategoryToOutletDto {
   @IsNotEmpty()
@@ -15,4 +16,8 @@ export class AddCategoryToOutletDto {
     require_protocol: true,
   })
   link: string;
+
+  @IsNotEmpty()
+  @ValidateNested()
+  selectors: Selectors;
 }

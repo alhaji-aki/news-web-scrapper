@@ -28,7 +28,9 @@ export class Outlet {
   @Column({ unique: true })
   website: string;
 
-  @OneToMany(() => OutletCategory, (outletCategory) => outletCategory.outlet)
+  @OneToMany(() => OutletCategory, (OutletCategory) => OutletCategory.outlet, {
+    cascade: true,
+  })
   public categories: OutletCategory[];
 
   @OneToMany(() => Article, (article) => article.outlet)

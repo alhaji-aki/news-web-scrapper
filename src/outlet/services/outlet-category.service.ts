@@ -41,9 +41,9 @@ export class OutletCategoryService {
     // create the outlet category
     return await this.outletCategoryRepository.save(
       new OutletCategory({
+        ...addCategoryToOutletDto,
         outlet: outletEntity,
         category: categoryEntity,
-        link: addCategoryToOutletDto.link,
       }),
     );
   }

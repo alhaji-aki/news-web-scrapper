@@ -5,6 +5,8 @@ import {
   IsArray,
   ValidateNested,
   ArrayMinSize,
+  ArrayUnique,
+  IsOptional,
 } from 'class-validator';
 import { IsUnique } from '../../common/validators/unique.validator';
 import { Outlet } from '../entities/outlet.entity';
@@ -31,9 +33,12 @@ export class CreateOutletDto extends BaseDto {
   })
   website: string;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @ArrayMinSize(1)
+  @ArrayUnique((o) => o.category)
+  @ArrayUnique((o) => o.link)
   @Type(() => AddCategoryToOutletDto)
   categories: AddCategoryToOutletDto[];
 }

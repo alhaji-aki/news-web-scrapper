@@ -25,16 +25,18 @@ export class OutletService {
   }
 
   async create(createOutletDto: CreateOutletDto) {
-    const categories = await Promise.all(
-      createOutletDto.categories.map(
-        async (categoryToAdd: AddCategoryToOutletDto) => {
-          return new OutletCategory({
-            ...categoryToAdd,
-            category: await this.categoryService.show(categoryToAdd.category),
-          });
-        },
-      ),
-    );
+    const categories =
+      createOutletDto.categories &&
+      (await Promise.all(
+        createOutletDto.categories.map(
+          async (categoryToAdd: AddCategoryToOutletDto) => {
+            return new OutletCategory({
+              ...categoryToAdd,
+              category: await this.categoryService.show(categoryToAdd.category),
+            });
+          },
+        ),
+      ));
 
     const outlet = this.outletsRepository.create({
       ...createOutletDto,

@@ -1,4 +1,5 @@
-import { MaxLength, IsUrl, IsNotEmpty } from 'class-validator';
+import { MaxLength, IsUrl, IsNotEmpty, ValidateNested } from 'class-validator';
+import { Selectors } from './selectors.dto';
 
 export class UpdateOutletCategoryDto {
   @IsNotEmpty()
@@ -8,4 +9,7 @@ export class UpdateOutletCategoryDto {
     require_protocol: true,
   })
   link: string;
+
+  @ValidateNested()
+  selectors: Selectors;
 }
