@@ -19,6 +19,10 @@ export class Selectors {
 
   @IsNotEmpty()
   @MaxLength(255)
+  date_format: string;
+
+  @IsNotEmpty()
+  @MaxLength(255)
   tags: string;
 
   @IsNotEmpty()

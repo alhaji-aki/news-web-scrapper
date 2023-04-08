@@ -5,6 +5,7 @@ import { OutletCategoryService } from '../../outlet/services/outlet-category.ser
 import { OutletCategory } from '../../outlet/entities/outlet-category.entity';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from '../dto/create-article.dto';
+import { parse } from 'date-fns';
 
 @Injectable()
 export class ScrapperService {
@@ -23,55 +24,62 @@ export class ScrapperService {
   ) {}
 
   @Cron('1 * * * * *')
-  async dispatchScrappingJobs() {
-    // Get all oulet categories
-    const outletCategories = await this.outletCategoryService.index();
+  async dispatchScrapingJobs() {
+    // TODO: only one category should be scrapped at a time... use redis for this
+
+    // Get oulet categories which are not being scrapped
+    const outletCategories =
+      await this.outletCategoryService.getOutletCategoriesForScraping();
 
     for (const outletCategory of outletCategories) {
+      await this.outletCategoryService.markAsCurrentlyScraping(outletCategory);
+
       this.logger.debug(
         `Fetching articles for ${outletCategory.outlet.name} with category ${outletCategory.category.name}`,
       );
 
-      // TODO: 2. Dispatch a job to scrap articles for each outlet category
-      await this.startScrapping(outletCategory);
+      await this.startScraping(outletCategory);
 
-      //   TODO: add last scrape time to avoid scrapping multiple times
+      await this.outletCategoryService.markAsScrapeCompleted(outletCategory);
     }
 
-    this.logger.debug('Scrapping completed');
+    // TODO: remove locked resource
+
+    this.logger.debug('Scraping completed');
   }
 
-  private async startScrapping(outletCategory: OutletCategory) {
+  private async startScraping(outletCategory: OutletCategory) {
     try {
       this.logger.debug('Opening the browser......');
       this.browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         args: ['--disable-setuid-sandbox'],
         ignoreHTTPSErrors: true,
       });
 
       const page = await this.browser.newPage();
 
-      const url = outletCategory.link;
+      this.logger.debug(`Navigating to ${outletCategory.link}...`);
 
-      this.logger.debug(`Navigating to ${url}...`);
+      await page.goto(outletCategory.link, this.gotoOptions);
 
-      await page.goto(url, this.gotoOptions);
+      const { article_card, link } = outletCategory.selectors;
 
-      // TODO: replace the selector with outlet category specific selector
-      await page.waitForSelector('article.jeg_post');
+      await page.waitForSelector(article_card);
 
       // Get links to articles
-      // TODO: replace the selector with outlet category specific selector
       const links = [
         ...new Set(
-          await page.$$eval('article.jeg_post', (articles: Element[]) => {
-            return articles.map(
-              (article) =>
-                article.querySelector('.jeg_post_title').querySelector('a')
-                  .href,
-            );
-          }),
+          await page.$$eval(
+            article_card,
+            (articles: Element[], link) => {
+              return articles.map(
+                (article) =>
+                  article.querySelector<HTMLAnchorElement>(link).href,
+              );
+            },
+            link,
+          ),
         ),
       ];
 
@@ -82,14 +90,10 @@ export class ScrapperService {
           continue;
         }
 
-        const article = await this.getArticleContent(link);
-
         try {
-          await this.articleService.create({
-            ...article,
-            outlet: outletCategory.outlet,
-            category: outletCategory.category,
-          });
+          await this.articleService.create(
+            await this.getArticleContent(link, outletCategory),
+          );
         } catch (error) {
           let message = error;
 
@@ -108,58 +112,63 @@ export class ScrapperService {
         this.browser.close();
       }
 
-      this.logger.error('Error occured getting articles => : ', err);
+      let message = err;
+      let stack = err;
+
+      if (err instanceof Error) {
+        message = err.message;
+        stack = err.stack;
+      }
+
+      this.logger.error(message, stack);
     }
   }
 
-  private async getArticleContent(link: string): Promise<CreateArticleDto> {
+  private async getArticleContent(
+    pageUrl: string,
+    outletCategory: OutletCategory,
+  ): Promise<CreateArticleDto> {
     return new Promise(async (resolve) => {
-      this.logger.debug(`Getting article contents at '${link}'`);
-      const article = new CreateArticleDto();
-      const newPage = await this.browser.newPage();
-      await newPage.goto(link, this.gotoOptions);
+      const { title, date, date_format, tags, image, content } =
+        outletCategory.selectors;
 
-      // TODO: replace the selector with outlet category specific selector
-      article['title'] = await newPage.$eval('h1.jeg_post_title', (text) =>
+      this.logger.debug(`Getting article contents at '${pageUrl}'`);
+      const article = new CreateArticleDto();
+
+      article['outlet'] = outletCategory.outlet;
+      article['category'] = outletCategory.category;
+
+      const newPage = await this.browser.newPage();
+      await newPage.goto(pageUrl, this.gotoOptions);
+
+      article['title'] = await newPage.$eval(title, (text) =>
         text.textContent.trim(),
       );
 
-      // TODO: replace the selector with outlet category specific selector
-      article['publishedAt'] = new Date(
-        Date.parse(
-          await newPage.$eval('.jeg_meta_date', (text) =>
-            text.textContent.trim(),
-          ),
-        ),
+      article['publishedAt'] = parse(
+        await newPage.$eval(date, (text) => text.textContent.trim()),
+        date_format,
+        new Date(),
       );
 
-      // TODO: replace the selector with outlet category specific selector
-      article['tags'] = await newPage.$$eval(
-        '.jeg_meta_category > span > a',
-        (tags: Element[]) => {
-          return tags
-            .map((tag) => tag.textContent.trim())
-            .filter((text) => text != '');
-        },
-      );
+      article['tags'] = await newPage.$$eval(tags, (tags: Element[]) => {
+        return tags
+          .map((tag) => tag.textContent.trim())
+          .filter((text) => text != '');
+      });
 
-      // TODO: replace the selector with outlet category specific selector
       article['imageUrl'] = await newPage.$eval(
-        '.thumbnail-container > img',
-        (image) => image.src,
+        image,
+        (image: HTMLImageElement) => image.src,
       );
 
-      article['url'] = link;
+      article['url'] = pageUrl;
 
-      // TODO: replace the selector with outlet category specific selector
-      article['content'] = await newPage.$$eval(
-        '.content-inner > p',
-        (text: Element[]) => {
-          return text
-            .map((text) => text.textContent.trim())
-            .filter((text) => text != '');
-        },
-      );
+      article['content'] = await newPage.$$eval(content, (text: Element[]) => {
+        return text
+          .map((text) => text.textContent.trim())
+          .filter((text) => text != '');
+      });
 
       await newPage.close();
 

@@ -5,7 +5,8 @@ import { OutletService } from './outlet.service';
 import { CategoryService } from '../../category/category.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OutletCategory } from '../entities/outlet-category.entity';
-import { Not, Repository } from 'typeorm';
+import { IsNull, LessThanOrEqual, Not, Repository } from 'typeorm';
+import { sub } from 'date-fns';
 
 @Injectable()
 export class OutletCategoryService {
@@ -15,12 +16,6 @@ export class OutletCategoryService {
     @InjectRepository(OutletCategory)
     private readonly outletCategoryRepository: Repository<OutletCategory>,
   ) {}
-
-  async index() {
-    return await this.outletCategoryRepository.find({
-      relations: ['outlet', 'category'],
-    });
-  }
 
   async create(outlet: string, addCategoryToOutletDto: AddCategoryToOutletDto) {
     const outletEntity = await this.outletService.find(outlet);
@@ -100,6 +95,35 @@ export class OutletCategoryService {
 
     // delete the outlet category
     return await this.outletCategoryRepository.remove(outletCategoryEntity);
+  }
+
+  async getOutletCategoriesForScraping() {
+    return await this.outletCategoryRepository.find({
+      where: [
+        {
+          currentlyScraping: false,
+          lastScrapedAt: LessThanOrEqual(sub(Date.now(), { minutes: 5 })),
+        },
+        {
+          currentlyScraping: false,
+          lastScrapedAt: IsNull(),
+        },
+      ],
+      relations: ['outlet', 'category'],
+    });
+  }
+
+  async markAsCurrentlyScraping(outletCategory: OutletCategory) {
+    return await this.outletCategoryRepository.update(outletCategory.id, {
+      currentlyScraping: true,
+    });
+  }
+
+  async markAsScrapeCompleted(outletCategory: OutletCategory) {
+    return await this.outletCategoryRepository.update(outletCategory.id, {
+      currentlyScraping: false,
+      lastScrapedAt: new Date(),
+    });
   }
 
   private async getOutletCategory(outlet: number, category: number) {

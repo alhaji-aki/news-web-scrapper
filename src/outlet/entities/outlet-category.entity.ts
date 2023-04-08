@@ -49,10 +49,17 @@ export class OutletCategory {
     link: string;
     title: string;
     date: string;
+    date_format: string;
     tags: string;
     image: string;
     content: string;
   };
+
+  @Column({ name: 'currently_scraping', type: 'boolean', default: false })
+  currentlyScraping: boolean;
+
+  @Column({ name: 'last_scraped_at', nullable: true })
+  lastScrapedAt: Date;
 
   @CreateDateColumn({
     type: 'timestamp',
