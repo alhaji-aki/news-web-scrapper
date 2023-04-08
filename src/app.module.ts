@@ -8,13 +8,28 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ArticleModule } from './article/article.module';
 import databaseConfig from './config/database.config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
+import redisConfig from './config/redis.config';
+import appConfig from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig],
+      load: [appConfig, databaseConfig, redisConfig],
       isGlobal: true,
       expandVariables: true,
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        store: redisStore,
+        host: configService.get('redis.host'),
+        port: configService.get('redis.port'),
+        password: configService.get('redis.password'),
+      }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,7 +42,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         password: configService.get('database.password'),
         database: configService.get('database.database'),
         autoLoadEntities: true,
-        synchronize: true, // TODO: change this use the app environment
+        synchronize: configService.get('app.environment') == 'development',
       }),
     }),
     ScheduleModule.forRoot(),

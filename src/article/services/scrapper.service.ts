@@ -1,4 +1,9 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import * as puppeteer from 'puppeteer';
 import { OutletCategoryService } from '../../outlet/services/outlet-category.service';
@@ -6,6 +11,9 @@ import { OutletCategory } from '../../outlet/entities/outlet-category.entity';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from '../dto/create-article.dto';
 import { parse } from 'date-fns';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ScrapperService {
@@ -21,11 +29,22 @@ export class ScrapperService {
   constructor(
     private readonly outletCategoryService: OutletCategoryService,
     private readonly articleService: ArticleService,
+    private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Cron('1 * * * * *')
   async dispatchScrapingJobs() {
-    // TODO: only one category should be scrapped at a time... use redis for this
+    // lock the scraper cron job to run one at a time
+    const cacheKey = this.configService.get('app.scraper_cache_key');
+
+    const value = await this.cacheManager.get(cacheKey);
+    if (value) {
+      this.logger.warn('A scraper is already running...');
+      return;
+    }
+
+    await this.cacheManager.set(cacheKey, true, 0);
 
     // Get oulet categories which are not being scrapped
     const outletCategories =
@@ -43,7 +62,7 @@ export class ScrapperService {
       await this.outletCategoryService.markAsScrapeCompleted(outletCategory);
     }
 
-    // TODO: remove locked resource
+    await this.cacheManager.del(cacheKey);
 
     this.logger.debug('Scraping completed');
   }
@@ -52,7 +71,7 @@ export class ScrapperService {
     try {
       this.logger.debug('Opening the browser......');
       this.browser = await puppeteer.launch({
-        headless: false,
+        headless: this.configService.get('app.environment') !== 'development',
         args: ['--disable-setuid-sandbox'],
         ignoreHTTPSErrors: true,
       });
@@ -81,7 +100,7 @@ export class ScrapperService {
             link,
           ),
         ),
-      ];
+      ].filter((item) => item && item != '');
 
       // get the contents of each article in the links extracted
       for (const link of links) {

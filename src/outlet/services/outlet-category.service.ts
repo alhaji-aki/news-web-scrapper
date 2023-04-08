@@ -7,12 +7,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OutletCategory } from '../entities/outlet-category.entity';
 import { IsNull, LessThanOrEqual, Not, Repository } from 'typeorm';
 import { sub } from 'date-fns';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OutletCategoryService {
   constructor(
     private readonly outletService: OutletService,
     private readonly categoryService: CategoryService,
+    private readonly configService: ConfigService,
     @InjectRepository(OutletCategory)
     private readonly outletCategoryRepository: Repository<OutletCategory>,
   ) {}
@@ -102,7 +104,11 @@ export class OutletCategoryService {
       where: [
         {
           currentlyScraping: false,
-          lastScrapedAt: LessThanOrEqual(sub(Date.now(), { minutes: 5 })),
+          lastScrapedAt: LessThanOrEqual(
+            sub(Date.now(), {
+              minutes: this.configService.get('app.scrape_minutes'),
+            }),
+          ),
         },
         {
           currentlyScraping: false,
