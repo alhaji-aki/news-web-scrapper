@@ -18,8 +18,8 @@ export class ArticleService {
     private tagRepository: Repository<Tag>,
   ) {}
 
-  index() {
-    return `This action returns all article`;
+  async index() {
+    return await this.articleRepository.find();
   }
 
   async create(createArticleDto: CreateArticleDto) {
@@ -44,8 +44,9 @@ export class ArticleService {
   }
 
   async show(article: string) {
-    const articleEntity = await this.articleRepository.findOneBy({
-      slug: article,
+    const articleEntity = await this.articleRepository.findOne({
+      where: { slug: article },
+      relations: ['outlet', 'category', 'tags'],
     });
 
     if (!articleEntity) {
@@ -61,8 +62,16 @@ export class ArticleService {
     });
   }
 
-  delete(article: string) {
-    return `This action removes a #${article} article`;
+  async delete(article: string) {
+    const articleEntity = await this.articleRepository.findOneBy({
+      slug: article,
+    });
+
+    if (!articleEntity) {
+      throw new NotFoundException('Article not found.');
+    }
+
+    return await this.articleRepository.remove(articleEntity);
   }
 
   private async preloadTagsByName(name: string): Promise<Tag> {
