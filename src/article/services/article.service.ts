@@ -6,8 +6,9 @@ import {
 import { CreateArticleDto } from '../dto/create-article.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from '../entities/article.entity';
-import { Repository } from 'typeorm';
+import { Like, Raw, Repository } from 'typeorm';
 import { Tag } from '../entities/tag.entity';
+import { FilterArticleDto } from '../dto/filter-article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -18,8 +19,31 @@ export class ArticleService {
     private tagRepository: Repository<Tag>,
   ) {}
 
-  async index() {
-    return await this.articleRepository.find();
+  async index(filterArticleDto: FilterArticleDto) {
+    const where = {};
+
+    if (filterArticleDto.tag) {
+      where['tags'] = { name: filterArticleDto.tag };
+    }
+
+    if (filterArticleDto.outlet) {
+      where['outlet'] = { name: Like(`${filterArticleDto.outlet}%`) };
+    }
+
+    if (filterArticleDto.category) {
+      where['category'] = { name: filterArticleDto.category };
+    }
+
+    if (filterArticleDto.publishedAt) {
+      where['publishedAt'] = Raw((alias) => `DATE(${alias}) = :date`, {
+        date: filterArticleDto.getFormatedPublishedAt(),
+      });
+    }
+
+    return await this.articleRepository.find({
+      where,
+      relations: ['outlet', 'category', 'tags'],
+    });
   }
 
   async create(createArticleDto: CreateArticleDto) {

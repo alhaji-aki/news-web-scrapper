@@ -1,16 +1,16 @@
-import { Controller, Get, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
 import { ArticleService } from '../services/article.service';
+import { FilterArticleDto } from '../dto/filter-article.dto';
 
 @Controller('articles')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get()
-  async index() {
-    // TODO: add filter {tag, outlet, category, date} options
+  async index(@Query() filterArticleDto: FilterArticleDto) {
     return {
       message: 'Get articles',
-      data: await this.articleService.index(),
+      data: await this.articleService.index(filterArticleDto),
     };
   }
 
