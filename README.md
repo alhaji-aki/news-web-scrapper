@@ -2,7 +2,7 @@
 
 ## Description
 
-- A webscrapper that takes news articles from major news outlets and provides an API for getting the news articles by category or outlet.
+A webscrapper that takes news articles from major news outlets and provides an API for getting the news articles by category or outlet.
 
 ## Installation
 
