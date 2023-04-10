@@ -1,0 +1,872 @@
+{
+	"info": {
+		"_postman_id": "c8015243-defb-461a-a346-3e14fc846904",
+		"name": "Web Scrapper",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2848345"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"17af1a84bd05bcecf379d9091b3b294964e8cf36fa32c34c85c621d86076a4ce\",\r\n    \"name\": \"Holy Jay\",\r\n    \"email\": \"holy1@gmail.com\",\r\n    \"password\": \"password\",\r\n    \"confirmPassword\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"abdulkudus2922@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/forgot-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"8195febc15c516fbac334f5981fd3aaed4a2962e76127ddc0ecb1c3556057415\",\r\n    \"email\": \"abdulkudus2922@gmail.com\",\r\n    \"password\": \"password\",\r\n    \"confirmPassword\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/reset-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Alhaji Aki\",\r\n    \"email\": \"abdulkudus2922@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currentPassword\": \"password1\",\r\n    \"password\": \"password\",\r\n    \"confirmPassword\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile/password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile",
+								"password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Outlets",
+			"item": [
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "Add Category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"category\": \"sports\",\r\n    \"link\": \"https://citisportsonline.com/\",\r\n    \"selectors\": {\r\n        \"article_card\": \"article.jeg_post\",\r\n        \"link\": \".jeg_post_title\",\r\n        \"title\": \"h1.jeg_post_title\",\r\n        \"date\": \".jeg_meta_date\",\r\n        \"date_format\": \"dd-mm-yyyy\",\r\n        \"tags\": \".jeg_meta_category > span > a\",\r\n        \"image\": \".thumbnail-container > img\",\r\n        \"content\": \".content-inner > p\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/outlets/:outlet/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"outlets",
+										":outlet",
+										"categories"
+									],
+									"variable": [
+										{
+											"key": "outlet",
+											"value": "66f618b5-8a0a-440b-9e25-1f4a965db743"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Outlet Category",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"link\": \"https://citibusinessnews.com\",\r\n    \"selectors\": {\r\n        \"article_card\": \"article.jeg_post\",\r\n        \"link\": \".jeg_post_title\",\r\n        \"title\": \"h1.jeg_post_title\",\r\n        \"date\": \".jeg_meta_date\",\r\n        \"date_format\": \"dd-mm-yyyy\",\r\n        \"tags\": \".jeg_meta_category > span > a\",\r\n        \"image\": \".thumbnail-container > img\",\r\n        \"content\": \".content-inner > p\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/outlets/:outlet/categories/:category",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"outlets",
+										":outlet",
+										"categories",
+										":category"
+									],
+									"variable": [
+										{
+											"key": "outlet",
+											"value": "66f618b5-8a0a-440b-9e25-1f4a965db743"
+										},
+										{
+											"key": "category",
+											"value": "business"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Outlet Category",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/outlets/:outlet/categories/:category",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"outlets",
+										":outlet",
+										"categories",
+										":category"
+									],
+									"variable": [
+										{
+											"key": "outlet",
+											"value": "66f618b5-8a0a-440b-9e25-1f4a965db743"
+										},
+										{
+											"key": "category",
+											"value": "business"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get outlets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/outlets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"outlets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create outlet",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Citi News\",\r\n    \"website\": \"https://citinewsroom.com/\",\r\n    \"categories\": [\r\n        {\r\n            \"category\": \"business\",\r\n            \"link\": \"https://citibusinessnews.com\",\r\n            \"selectors\": {\r\n                \"article_card\": \"article.jeg_post\",\r\n                \"link\": \".jeg_post_title\",\r\n                \"title\": \"h1.jeg_post_title\",\r\n                \"date\": \".jeg_meta_date\",\r\n                \"date_format\": \"dd-mm-yyyy\",\r\n                \"tags\": \".jeg_meta_category > span > a\",\r\n                \"image\": \".thumbnail-container > img\",\r\n                \"content\": \".content-inner > p\"\r\n            }\r\n        },\r\n        {\r\n            \"category\": \"sports\",\r\n            \"link\": \"https://citisportsonline.com/\",\r\n            \"selectors\": {\r\n                \"article_card\": \"article.jeg_post\",\r\n                \"link\": \".jeg_post_title\",\r\n                \"title\": \"h1.jeg_post_title\",\r\n                \"date\": \".jeg_meta_date\",\r\n                \"date_format\": \"dd-mm-yyyy\",\r\n                \"tags\": \".jeg_meta_category > span > a\",\r\n                \"image\": \".thumbnail-container > img\",\r\n                \"content\": \".content-inner > p\"\r\n            }\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/outlets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"outlets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Outlet",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/outlets/:outlet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"outlets",
+								":outlet"
+							],
+							"variable": [
+								{
+									"key": "outlet",
+									"value": "66f618b5-8a0a-440b-9e25-1f4a965db743"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Outlet",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Citi News\",\r\n    \"website\": \"https://citinewsroom.com/\",\r\n    \"urlStructure\": \"https://citinewsroom.com/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/outlets/:outlet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"outlets",
+								":outlet"
+							],
+							"variable": [
+								{
+									"key": "outlet",
+									"value": "4f76801b-3a90-4891-8436-9e4326195b9b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Outlet",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/outlets/:outlet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"outlets",
+								":outlet"
+							],
+							"variable": [
+								{
+									"key": "outlet",
+									"value": "4f76801b-3a90-4891-8436-9e4326195b9b"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Business\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/:category",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								":category"
+							],
+							"variable": [
+								{
+									"key": "category",
+									"value": "international"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Citi News\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/:category",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								":category"
+							],
+							"variable": [
+								{
+									"key": "category",
+									"value": "citi-news"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/:category",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								":category"
+							],
+							"variable": [
+								{
+									"key": "category",
+									"value": "Citi-News-2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Articles",
+			"item": [
+				{
+					"name": "Get articles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/articles?tag=&outlet=&category=&publishedAt=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "tag",
+									"value": "",
+									"description": "tag name"
+								},
+								{
+									"key": "outlet",
+									"value": "",
+									"description": "anything that starts with the param submitted"
+								},
+								{
+									"key": "category",
+									"value": "",
+									"description": "category name"
+								},
+								{
+									"key": "publishedAt",
+									"value": "",
+									"description": "dd-mm-yyyy or yyyy-mm-dd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get article",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/articles/:article",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								":article"
+							],
+							"variable": [
+								{
+									"key": "article",
+									"value": "imf-raises-concerns-over-wave-of-debt-restructuring-requests-worried-about-borrowing-spreads"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete article",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/articles/:article",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								":article"
+							],
+							"variable": [
+								{
+									"key": "article",
+									"value": "imf-raises-concerns-over-wave-of-debt-restructuring-requests-worried-about-borrowing-spreads"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invites",
+			"item": [
+				{
+					"name": "Get invites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/invites",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"invites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send invite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"holy1@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/invites",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"invites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke invite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"holy@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/invites/:invite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"invites",
+								":invite"
+							],
+							"variable": [
+								{
+									"key": "invite",
+									"value": "e18e711d-ddb8-4ed7-86d1-b5bf1aaa6afc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend invite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"holy@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/invites/:invite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"invites",
+								":invite"
+							],
+							"variable": [
+								{
+									"key": "invite",
+									"value": "205392cf-6a04-4d48-aca0-98a66d813e0e"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
