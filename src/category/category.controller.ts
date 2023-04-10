@@ -6,14 +6,16 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CustomBody } from '../common/decorators/custom-body.decorator';
 import { customDecoratorsValidationOptions } from '../config/validation.config';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-// TODO: hide all these endpoints except index behind an authentication
+@UseGuards(JwtAuthGuard)
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

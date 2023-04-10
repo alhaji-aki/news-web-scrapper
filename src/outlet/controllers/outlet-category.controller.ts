@@ -1,9 +1,18 @@
-import { Controller, Post, Patch, Param, Delete, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Patch,
+  Param,
+  Delete,
+  Body,
+  UseGuards,
+} from '@nestjs/common';
 import { OutletCategoryService } from '../services/outlet-category.service';
 import { AddCategoryToOutletDto } from '../dto/add-category-to-outlet.dto';
 import { UpdateOutletCategoryDto } from '../dto/update-outlet-category.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
-// TODO: hide all these endpoints behind an authentication
+@UseGuards(JwtAuthGuard)
 @Controller('outlets/:outlet/categories')
 export class OutletCategoryController {
   constructor(private readonly outletCategoryService: OutletCategoryService) {}

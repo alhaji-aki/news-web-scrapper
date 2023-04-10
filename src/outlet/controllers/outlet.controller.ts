@@ -6,14 +6,16 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { OutletService } from '../services/outlet.service';
 import { CreateOutletDto } from '../dto/create-outlet.dto';
 import { UpdateOutletDto } from '../dto/update-outlet.dto';
 import { CustomBody } from '../../common/decorators/custom-body.decorator';
 import { customDecoratorsValidationOptions } from '../../config/validation.config';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
-// TODO: hide all these endpoints except index behind an authentication
+@UseGuards(JwtAuthGuard)
 @Controller('outlets')
 export class OutletController {
   constructor(private readonly outletService: OutletService) {}

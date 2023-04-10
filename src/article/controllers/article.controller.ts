@@ -1,6 +1,14 @@
-import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ArticleService } from '../services/article.service';
 import { FilterArticleDto } from '../dto/filter-article.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('articles')
 export class ArticleController {
@@ -22,7 +30,7 @@ export class ArticleController {
     };
   }
 
-  // TODO: hide this behind an authentication layer
+  @UseGuards(JwtAuthGuard)
   @Delete(':article')
   async destroy(@Param('article') article: string) {
     return {
